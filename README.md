@@ -23,6 +23,7 @@ cargo build --release --target=aarch64-unknown-linux-gnu
 chmod +x ./Helious
 sudo ./Helious
 ```
+![helious-console](https://github.com/user-attachments/assets/087b5587-6331-4400-823f-cbe82f84616b)
 
 ## BattleBit anti-recoil downsides
 - Doesn't support horizontal recoil compensation. (Impossible)
