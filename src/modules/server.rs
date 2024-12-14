@@ -14,7 +14,7 @@ pub fn start_local_uart_server(uart_path: &Path, gadget_file: File) {
         println!("UART Path does not exist.");
         return;
     }
-    
+
     if let Ok(mut file) = OpenOptions::new()
         .read(true)
         .write(true)
@@ -81,7 +81,7 @@ pub fn start_local_server(address: &str, port: u16, gadget_file: File) {
             if size != 0 {
                 mouse_x = ((buf[1] as i16) << 8) | (buf[0] as i16);
                 mouse_y = ((buf[3] as i16) << 8) | (buf[2] as i16);
-                
+
                 let mouse_state = mouses[0].get_state();
 
                 // let ignore_aim = buf[4] > 0;

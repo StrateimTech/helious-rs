@@ -138,7 +138,7 @@ pub fn start_recoil_handler(recoil_settings: RecoilSettings, gadget_file: File) 
                 if recoil_settings.local_overflow && recoil_settings.global_overflow {
                     if global_overflow_y.trunc() != dec!(0.0) {
                         let truncated_global_overflow_y = global_overflow_y.round();
-                         global_overflow_y -= truncated_global_overflow_y;
+                        global_overflow_y -= truncated_global_overflow_y;
 
                         local_y += truncated_global_overflow_y;
                     }
