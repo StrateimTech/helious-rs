@@ -1,5 +1,6 @@
 use std::path::Path;
 use std::thread;
+use std::time::Duration;
 use figlet_rs::FIGfont;
 
 use hid_api_rs::{hid, HidMouse, HidSpecification};
@@ -142,7 +143,7 @@ fn main() {
         thread::spawn(move || server::start_state_sender(&arguments.state_port, 7484));
     }
 
-    if arguments.local_receiver {   
+    if arguments.local_receiver {
         println!(">> Running Local Receiver | {}", &arguments.local_ip);
         thread::spawn(move || {
             if let Err(err) = set_current_thread_priority(ThreadPriority::Max) {
@@ -164,5 +165,7 @@ fn main() {
         });
     }
 
-    loop {}
+    loop {
+        thread::sleep(Duration::from_millis(5))
+    }
 }
