@@ -34,7 +34,15 @@ struct Cmds {
 
     #[structopt(long, default_value = "192.168.68.62", required_if("state-sender", "true"))]
     /// Remote address for state receiver client
-    pub state_port: String
+    pub state_port: String,
+
+    #[structopt(short, long, short = "o")]
+    /// Start local lan state receiving
+    pub local_receiver: bool,
+
+    #[structopt(long, default_value = "192.168.68.65", required_if("local_receiver", "true"))]
+    /// local lan ip
+    pub local_ip: String
 }
 
 fn main() {
@@ -128,21 +136,22 @@ fn main() {
         println!(">> Running Recoil Handler");
         thread::spawn(|| recoil::start_recoil_handler(arguments.recoil_settings, hid::open_gadget_device(String::from("/dev/hidg1")).unwrap()));
     }
-    
+
     if arguments.state_sender {
         println!(">> Running State Sender | {}", &arguments.state_port);
         thread::spawn(move || server::start_state_sender(&arguments.state_port, 7484));
     }
 
-    let local_ip = "192.168.68.54";
-    println!(">> Running Local Receiver | {}", &local_ip);
-    thread::spawn(|| {
-        if let Err(err) = set_current_thread_priority(ThreadPriority::Max) {
-            println!("Failed to set max thread priority, {}", err);
-        }
+    if arguments.local_receiver {   
+        println!(">> Running Local Receiver | {}", &arguments.local_ip);
+        thread::spawn(move || {
+            if let Err(err) = set_current_thread_priority(ThreadPriority::Max) {
+                println!("Failed to set max thread priority, {}", err);
+            }
 
-        server::start_local_server(local_ip, 7483, hid::open_gadget_device(String::from("/dev/hidg1")).unwrap())
-    });
+            server::start_local_server(&arguments.local_ip, 7483, hid::open_gadget_device(String::from("/dev/hidg1")).unwrap())
+        });
+    }
 
     if arguments.uart_receiver {
         println!(">> Running Local UART Receiver | {}", &arguments.uart_port);
