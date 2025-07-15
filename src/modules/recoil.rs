@@ -5,7 +5,7 @@ use std::time::{Duration, Instant};
 use hid_api_rs::gadgets::mouse;
 use hid_api_rs::gadgets::mouse::MouseRaw;
 use rust_decimal::{Decimal, MathematicalOps};
-use rust_decimal::prelude::ToPrimitive;
+use rust_decimal::prelude::{ToPrimitive};
 use rust_decimal_macros::dec;
 use structopt::StructOpt;
 
@@ -115,7 +115,7 @@ pub fn start_recoil_handler(recoil_settings: RecoilSettings, gadget_file: File) 
     let mouse = mouses.get_mut(0).unwrap();
 
     let mut overflow_y;
-    let mut time_overflow ;
+    let mut time_overflow;
 
     loop {
         let perf = Instant::now();
@@ -128,7 +128,7 @@ pub fn start_recoil_handler(recoil_settings: RecoilSettings, gadget_file: File) 
                 let mut local_y = Decimal::from_f32_retain(recoil_settings.vertical).unwrap() * Decimal::from_f32_retain(recoil_settings.scope).unwrap();
 
                 if current_bullet == 0 {
-                    local_y = local_y.powd(Decimal::from_f32_retain(recoil_settings.initial).unwrap());
+                    local_y += Decimal::from_f32_retain(recoil_settings.initial).unwrap();
                 }
 
                 local_y *= multiplier;
@@ -150,7 +150,7 @@ pub fn start_recoil_handler(recoil_settings: RecoilSettings, gadget_file: File) 
                 global_time_overflow = dec!(0.0);
 
                 for _ in 0..best_smoothness.to_i16().unwrap() {
-                    let smoothed_y = local_y  / best_smoothness;
+                    let smoothed_y = local_y / best_smoothness;
                     let mut smoothed_int_y = smoothed_y.round();
 
                     if recoil_settings.local_overflow {
